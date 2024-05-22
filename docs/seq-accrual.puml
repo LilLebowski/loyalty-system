@@ -1,0 +1,55 @@
+@startuml
+actor Пользователь as User
+participant API
+participant Worker
+participant Auth
+participant Storage
+participant AccrualClient
+
+API -> Worker: Запуск воркера\nдля проверки\nначисления баллов
+Worker -> Storage: Запрос списка созданных заказов\nсо статусом\nREGISTERED или PROCESSING
+Storage --> Worker: Список заказов
+loop
+Worker -> AccrualClient: Получение информации\nо расчёте начислений баллов\nлояльности по заказу
+AccrualClient --> Worker: Статус начисления
+Worker -> Storage: Обновление информации по заказу
+Worker -> Storage: Обновление информации\nпо балансу пользователя
+end
+
+== Загрузка номера заказа==
+User -> API: POST /api/user/orders
+API -> Auth: Проверка аутентификации пользователя
+Auth --> API: Статус аутентификации пользователя
+alt Аутентификации прошла
+    API -> Storage: Запрос заказа по номеру
+    Storage --> API: Данные по заказу
+    alt Заказ не существует
+        API -> Storage: Создание новой записи по заказу
+        API --> User: 202 status code
+    else Заказ существует
+        API --> User: 200 status code
+    else Номер заказа уже был загружен другим пользователем
+        API --> User: 409 status code
+    end
+else Аутентификации не прошла
+    API --> User: 401 status code
+end
+
+== Запрос на списание средств==
+User -> API: POST /api/user/balance/withdraw
+API -> Auth: Проверка аутентификации пользователя
+Auth --> API: Статус аутентификации пользователя
+alt Аутентификации прошла
+    API -> Storage: Запрос баланса пользователя
+    Storage --> API: Данные по балансу пользователя
+    alt Достаточно средств
+        API -> Storage: Создание новой записи по списанию
+        API -> Storage: Обновление информации по балансу пользователя
+        API --> User: 200 status code
+    else Недостаточно средств
+        API --> User: 402 status code
+    end
+else Аутентификации не прошла
+    API --> User: 401 status code
+end
+@enduml

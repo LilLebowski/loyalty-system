@@ -11,5 +11,12 @@
 
 ### ER-диаграмма
 
-![image](erd.png)
+![image](docs/erd.png)
 
+### Диаграмма компонентов
+
+![image](docs/component.png)
+
+### Sequence-диаграмма
+
+![image](docs/seq-accrual.png)
