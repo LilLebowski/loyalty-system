@@ -6,7 +6,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"go.uber.org/mock/gomock"
 	"io"
 	"net/http"
@@ -80,7 +80,7 @@ func TestRegisterHandler(t *testing.T) {
 			},
 			storage.Auth{Login: "test", Password: "test"},
 			"",
-			errors.New("user with login test exist"),
+			fmt.Errorf("user with login test exist"),
 		},
 	}
 	for _, tc := range tt {
@@ -405,7 +405,7 @@ func TestAddWithdrawalHandler(t *testing.T) {
 			},
 			"12345678903",
 			storage.Withdrawal{
-				ExternalOrderId: "12345678903",
+				ExternalOrderID: "12345678903",
 				Sum:             100,
 			},
 			nil,
@@ -419,7 +419,7 @@ func TestAddWithdrawalHandler(t *testing.T) {
 			},
 			"12345678903",
 			storage.Withdrawal{
-				ExternalOrderId: "12345678903",
+				ExternalOrderID: "12345678903",
 				Sum:             100,
 			},
 			utils.NewLessBonusErrorError("Got less bonus points than expected", nil),
@@ -472,7 +472,7 @@ func TestGetWithdrawalsHandler(t *testing.T) {
 			"12345678903",
 			[]storage.Withdrawal{
 				{
-					ExternalOrderId: "12345678903",
+					ExternalOrderID: "12345678903",
 					Sum:             200,
 					ProcessedAt:     time.Time{},
 				},

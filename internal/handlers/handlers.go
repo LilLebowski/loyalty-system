@@ -49,6 +49,10 @@ func (strg *HandlerWithStorage) Register(ctx *gin.Context) {
 		return
 	}
 	token, err := auth.BuildJWTString(strg.config, userID)
+	if err != nil {
+		http.Error(ctx.Writer, "Server error", http.StatusInternalServerError)
+		return
+	}
 	ctx.SetCookie(auth.CookieName, token, 3600, "/", "localhost", false, true)
 	ctx.Writer.WriteHeader(http.StatusOK)
 	ctx.Writer.Write(make([]byte, 0))
@@ -182,7 +186,7 @@ func (strg *HandlerWithStorage) AddWithdrawal(ctx *gin.Context) {
 		http.Error(ctx.Writer, "Error while getting data", http.StatusInternalServerError)
 		return
 	}
-	_, errCode, _ := utils.ValidateOrder(withdrawal.ExternalOrderId)
+	_, errCode, _ := utils.ValidateOrder(withdrawal.ExternalOrderID)
 	if errCode != http.StatusOK {
 		http.Error(ctx.Writer, "Error bad order number", errCode)
 		return

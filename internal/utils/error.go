@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -53,5 +52,5 @@ func (e *LessBonusError) Error() string {
 	return fmt.Sprintf("[%s] %v", e.Message, e.Err)
 }
 
-var ErrTooManyRequests = errors.New("too many requests")
-var ErrNoContent = errors.New("no content")
+var ErrTooManyRequests = fmt.Errorf("too many requests")
+var ErrNoContent = fmt.Errorf("no content")

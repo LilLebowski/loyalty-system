@@ -3,7 +3,6 @@ package storage
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -48,7 +47,7 @@ type UserBalance struct {
 }
 
 type Withdrawal struct {
-	ExternalOrderId string    `json:"external_order_id"`
+	ExternalOrderID string    `json:"external_order_id"`
 	Sum             float64   `json:"sum"`
 	ProcessedAt     time.Time `json:"processed_at,omitempty"`
 }
@@ -88,7 +87,7 @@ func (s *DBStorage) Register(ctx context.Context, login string, passwordHash str
 		return "", err
 	}
 	if userID.Valid {
-		return "", errors.New(fmt.Sprintf("user with login %s exist", login))
+		return "", fmt.Errorf("user with login %s exist", login)
 	}
 	row = s.db.QueryRowContext(ctx, "INSERT INTO \"user\" (\"login\", password_hash) VALUES ($1, $2) RETURNING id", login, passwordHash)
 	if err := row.Scan(&userID); err != nil {
@@ -203,7 +202,7 @@ func (s *DBStorage) AddWithdrawalForUser(ctx context.Context, userID string, wit
 	var withdrawalID string
 	row := s.db.QueryRowContext(ctx,
 		"INSERT INTO withdrawal (user_id, sum, external_order_id) VALUES ($1, $2, $3) RETURNING id",
-		userID, withdrawal.Sum, withdrawal.ExternalOrderId,
+		userID, withdrawal.Sum, withdrawal.ExternalOrderID,
 	)
 	err = row.Scan(&withdrawalID)
 	if err != nil {
