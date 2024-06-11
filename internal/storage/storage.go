@@ -47,9 +47,9 @@ type UserBalance struct {
 }
 
 type Withdrawal struct {
-	ExternalOrderID string    `json:"order"`
-	Sum             float64   `json:"sum"`
-	ProcessedAt     time.Time `json:"processed_at,omitempty"`
+	Order       string    `json:"order"`
+	Sum         float64   `json:"sum"`
+	ProcessedAt time.Time `json:"processed_at,omitempty"`
 }
 
 type Accrual struct {
@@ -202,7 +202,7 @@ func (s *DBStorage) AddWithdrawalForUser(ctx context.Context, userID string, wit
 	var withdrawalID string
 	row := s.db.QueryRowContext(ctx,
 		"INSERT INTO withdrawal (user_id, sum, external_order_id) VALUES ($1, $2, $3) RETURNING id",
-		userID, withdrawal.Sum, withdrawal.ExternalOrderID,
+		userID, withdrawal.Sum, withdrawal.Order,
 	)
 	err = row.Scan(&withdrawalID)
 	if err != nil {

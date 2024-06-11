@@ -416,8 +416,8 @@ func TestAddWithdrawalHandler(t *testing.T) {
 			},
 			"12345678903",
 			storage.Withdrawal{
-				ExternalOrderID: "7031016",
-				Sum:             343.99,
+				Order: "7031016",
+				Sum:   343.99,
 			},
 			nil,
 		},
@@ -430,8 +430,8 @@ func TestAddWithdrawalHandler(t *testing.T) {
 			},
 			"12345678903",
 			storage.Withdrawal{
-				ExternalOrderID: "12345678903",
-				Sum:             100,
+				Order: "12345678903",
+				Sum:   100,
 			},
 			utils.NewLessBonusErrorError("Got less bonus points than expected", nil),
 		},
@@ -483,9 +483,9 @@ func TestGetWithdrawalsHandler(t *testing.T) {
 			"12345678903",
 			[]storage.Withdrawal{
 				{
-					ExternalOrderID: "12345678903",
-					Sum:             200,
-					ProcessedAt:     time.Time{},
+					Order:       "12345678903",
+					Sum:         200,
+					ProcessedAt: time.Time{},
 				},
 			},
 			nil,

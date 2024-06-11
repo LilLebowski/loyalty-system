@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +33,6 @@ func (strg *HandlerWithStorage) Register(ctx *gin.Context) {
 		return
 	}
 	var authData storage.Auth
-	log.Printf("data: %v", ctx.Request.Body)
 	err = json.Unmarshal(jsonBody, &authData)
 	if err != nil {
 		http.Error(ctx.Writer, "Error unmarshal body", http.StatusBadRequest)
@@ -186,7 +184,7 @@ func (strg *HandlerWithStorage) AddWithdrawal(ctx *gin.Context) {
 		http.Error(ctx.Writer, "Error while getting data", http.StatusInternalServerError)
 		return
 	}
-	_, errCode, _ := utils.ValidateOrder(withdrawal.ExternalOrderID)
+	_, errCode, _ := utils.ValidateOrder(withdrawal.Order)
 	if errCode != http.StatusOK {
 		http.Error(ctx.Writer, "Error bad order number", errCode)
 		return
