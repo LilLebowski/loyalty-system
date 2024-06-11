@@ -232,6 +232,17 @@ func TestAddOrderHandler(t *testing.T) {
 			nil,
 		},
 		{
+			"Add order 422",
+			wantResponse{
+				http.StatusUnprocessableEntity,
+				"",
+				"",
+			},
+			"12345678902",
+			"bdf8817b-3225-4a46-9358-aa091b3cb478",
+			nil,
+		},
+		{
 			"Add order 409",
 			wantResponse{
 				http.StatusConflict,
@@ -405,8 +416,8 @@ func TestAddWithdrawalHandler(t *testing.T) {
 			},
 			"12345678903",
 			storage.Withdrawal{
-				ExternalOrderID: "12345678903",
-				Sum:             100,
+				ExternalOrderID: "7031016",
+				Sum:             343.99,
 			},
 			nil,
 		},

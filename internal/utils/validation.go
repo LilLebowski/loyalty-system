@@ -10,9 +10,9 @@ import (
 func ValidateOrder(order string) (uint, int, error) {
 	orderNum, err := strconv.Atoi(order)
 	if err != nil || orderNum < 0 {
-		return 0, http.StatusBadRequest, err
+		return 0, http.StatusUnprocessableEntity, err
 	}
-	isValid := luhn.Valid(79927398713)
+	isValid := luhn.Valid(orderNum)
 	if isValid {
 		return uint(orderNum), http.StatusOK, nil
 	} else {
