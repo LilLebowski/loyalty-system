@@ -13,14 +13,10 @@ func Init(s storage.Storage, cfg *config.Config) *gin.Engine {
 	handlerWithStorage := handlers.Init(s, cfg)
 	router := gin.Default()
 
-	authRouter := router.Group("/api/user/auth")
-	{
-		authRouter.POST("/register", handlerWithStorage.Register)
-		authRouter.POST("/login", handlerWithStorage.Login)
-	}
-
 	userRouter := router.Group("/api/user", auth.Authorization(cfg))
 	{
+		userRouter.POST("/register", handlerWithStorage.Register)
+		userRouter.POST("/login", handlerWithStorage.Login)
 		userRouter.POST("/orders", handlerWithStorage.AddOrder)
 		userRouter.GET("/orders", handlerWithStorage.GetOrders)
 		userRouter.GET("/balance", handlerWithStorage.GetBalance)

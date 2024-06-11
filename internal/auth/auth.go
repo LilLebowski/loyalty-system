@@ -19,6 +19,9 @@ type Claims struct {
 
 func Authorization(config *config.Config) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		if ctx.Request.URL.Path == "/api/user/register" || ctx.Request.URL.Path == "/api/user/login" {
+			return
+		}
 		userID, err := getUserIDFromCookie(ctx, config)
 		if err != nil {
 			code := http.StatusUnauthorized
