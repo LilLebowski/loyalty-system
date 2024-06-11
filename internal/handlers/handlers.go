@@ -217,7 +217,7 @@ func (strg *HandlerWithStorage) GetWithdrawals(ctx *gin.Context) {
 		http.Error(ctx.Writer, "Server error", http.StatusInternalServerError)
 		return
 	}
-	fmt.Println(withdrawalsMarshalled)
+	fmt.Println(string(withdrawalsMarshalled))
 	ctx.Writer.Header().Set("Content-Type", "application/json")
 	ctx.Writer.WriteHeader(http.StatusOK)
 	ctx.Writer.Write(withdrawalsMarshalled)
