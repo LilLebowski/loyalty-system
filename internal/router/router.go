@@ -4,21 +4,25 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/LilLebowski/loyalty-system/cmd/gophermart/config"
+	"github.com/LilLebowski/loyalty-system/internal/auth"
 	"github.com/LilLebowski/loyalty-system/internal/handlers"
 	"github.com/LilLebowski/loyalty-system/internal/storage"
 )
 
-func Init(s *storage.Storage, cfg *config.Config) *gin.Engine {
+func Init(s storage.Storage, cfg *config.Config) *gin.Engine {
 	handlerWithStorage := handlers.Init(s, cfg)
 	router := gin.Default()
 
-	router.POST("/api/user/register", handlerWithStorage.Register)
-	router.POST("/api/user/login", handlerWithStorage.Login)
-	router.POST("/api/user/orders", handlerWithStorage.AddOrder)
-	router.GET("/api/user/orders", handlerWithStorage.GetOrders)
-	router.GET("/api/user/balance", handlerWithStorage.GetBalance)
-	router.POST("/api/user/balance/withdraw", handlerWithStorage.AddWithdrawal)
-	router.GET("/api/user/withdrawals", handlerWithStorage.GetWithdrawals)
+	userRouter := router.Group("/api/user", auth.Authorization(cfg))
+	{
+		userRouter.POST("/register", handlerWithStorage.Register)
+		userRouter.POST("/login", handlerWithStorage.Login)
+		userRouter.POST("/orders", handlerWithStorage.AddOrder)
+		userRouter.GET("/orders", handlerWithStorage.GetOrders)
+		userRouter.GET("/balance", handlerWithStorage.GetBalance)
+		userRouter.POST("/balance/withdraw", handlerWithStorage.AddWithdrawal)
+		userRouter.GET("/withdrawals", handlerWithStorage.GetWithdrawals)
+	}
 
 	router.HandleMethodNotAllowed = true
 
