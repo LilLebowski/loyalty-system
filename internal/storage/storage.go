@@ -220,7 +220,7 @@ func (s *DBStorage) GetWithdrawalsForUser(ctx context.Context, userID string) ([
 	withdrawalList := make([]Withdrawal, 0)
 	for rows.Next() {
 		var withdrawal Withdrawal
-		err = rows.Scan(&withdrawal.Sum, &withdrawal.Sum, &withdrawal.ProcessedAt)
+		err = rows.Scan(&withdrawal.Order, &withdrawal.Sum, &withdrawal.ProcessedAt)
 		if err != nil {
 			return make([]Withdrawal, 0), err
 		}
